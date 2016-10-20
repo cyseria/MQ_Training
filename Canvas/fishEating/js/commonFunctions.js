@@ -1,6 +1,6 @@
 window.requestAnimFrame = (function() {
 	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-		function( callback, element) {
+		function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
 			return window.setTimeout(callback, 1000 / 60);
 		};
 })();
@@ -32,6 +32,13 @@ function lerpAngle(a, b, t) {
 	return a + d * t;
 }
 
+/**
+ * [lerpDistance description]
+ * @param  {[type]} aim   [目标值]
+ * @param  {[type]} cur   [当前值]
+ * @param  {[type]} ratio [百分比]
+ * @return {[type]}       [按照一定的比例趋向于目标值]
+ */
 function lerpDistance(aim, cur, ratio) {
 	var delta = cur - aim;
 	return aim + delta * ratio;
