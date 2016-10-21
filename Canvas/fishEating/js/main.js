@@ -14,6 +14,14 @@ var mom;
 var mx; //鼠标x坐标
 var my; // 鼠标y坐标
 
+var babyTail = [];
+var babyEye = [];
+var babyBody = [];
+
+var momTail = [];
+var momEye = [];
+var momBody = [];
+
 document.body.onload = game;
 
 function game() {
@@ -24,10 +32,10 @@ function game() {
 }
 
 function init() {
-	can1 = document.getElementById("canvas1"); // 小鱼
+	can1 = document.getElementById("canvas1"); // 大鱼，小鱼
 	ctx1 = can1.getContext("2d");
 
-	can2 = document.getElementById("canvas2"); // 背景，海葵， 果实
+	can2 = document.getElementById("canvas2"); // 背景，海葵，果实
 	ctx2 = can2.getContext("2d");
 
 	can1.addEventListener('mousemove', onMouseMove, false);
@@ -46,17 +54,55 @@ function init() {
 	mom = new momObj();
 	mom.init();
 
+	baby = new babyObj();
+	baby.init();
+
 	mx = canWidth * 0.5;
 	my = canHeight * 0.5;
+
+	// 小鱼的眼睛尾巴身体
+	for (var i = 0; i < 8; i++) {
+		babyTail[i] = new Image();
+		babyTail[i].src = "./src/babyTail" + i + ".png";
+	}
+	for (var i = 0; i < 2; i++) {
+		babyEye[i] = new Image();
+		babyEye[i].src = "./src/babyEye" + i + ".png";
+	}
+	for (var i = 0; i < 20; i++) {
+		babyBody[i] = new Image();
+		babyBody[i].src = "./src/babyFade" + i + ".png";
+	}
+
+	// 大鱼的眼睛尾巴身体
+	for (var i = 0; i < 8; i++) {
+		momTail[i] = new Image();
+		momTail[i].src = "./src/bigTail" + i + ".png";
+	}
+
+	for (var i = 0; i < 2; i++) {
+		momEye[i] = new Image();
+		momEye[i].src = "./src/bigEye" + i + ".png";
+	}
+
+	// for (var i = 0; i < 20; i++) {
+	// 	babyBody[i] = new Image();
+	// 	babyBody[i].src = "./src/babyFade" + i + ".png";
+	// }
 }
 
-
+// 每一帧需要绘制的
 function gameLoop() {
 	window.requestAnimFrame(gameLoop);
+
+	// 记录相邻量帧之间的时间间隔，让动画更加自然
 	var now = Date.now();
 	deltaTime = now - lastTime;
 	lastTime = now;
-	
+	if (deltaTime > 40) {
+		deltaTime = 40;
+	}
+
 	drawBackground();
 
 	ane.draw();
@@ -66,7 +112,11 @@ function gameLoop() {
 
 	ctx1.clearRect(0, 0, canWidth, canHeight);
 	mom.draw();
+	baby.draw();
+
 	momFruitCollision();
+	momBabyCollision();
+	
 }
 
 function onMouseMove(e) {

@@ -10,3 +10,17 @@ function momFruitCollision() {
 		}
 	}
 }
+
+// 判断大鱼和小鱼的距离
+function momBabyCollision() {
+	for (var i = 0; i < fruit.num; i++) {
+		if (fruit.alive[i]) {
+			// 计算距离
+			var l = calLength2(baby.x, baby.y, mom.x, mom.y);
+			if (l < 900) {
+				// 恢复到初始状态
+				baby.babyBodyCount = 0;
+			}
+		}
+	}
+}

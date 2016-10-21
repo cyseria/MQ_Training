@@ -5,7 +5,7 @@ window.requestAnimFrame = (function() {
 		};
 })();
 
-
+// 碰撞检测，获取两点之间的距离
 function calLength2(x1, y1, x2, y2) {
 	return Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2);
 }
@@ -24,7 +24,7 @@ function randomColor() {
 	return "rgba(" + col[0] + "," + col[1] + "," + col[2] + ",";
 }
 
-
+// 按照一定的比例趋向于目标角度
 function lerpAngle(a, b, t) {
 	var d = b - a;
 	if (d > Math.PI) d = d - 2 * Math.PI;
@@ -37,7 +37,7 @@ function lerpAngle(a, b, t) {
  * @param  {[type]} aim   [目标值]
  * @param  {[type]} cur   [当前值]
  * @param  {[type]} ratio [百分比]
- * @return {[type]}       [按照一定的比例趋向于目标值]
+ * @return {[type]}       [按照一定的比例趋向于目标位置]
  */
 function lerpDistance(aim, cur, ratio) {
 	var delta = cur - aim;
