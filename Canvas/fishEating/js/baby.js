@@ -22,20 +22,17 @@ var babyObj = function () {
 babyObj.prototype.init = function() {
 	this.x = canWidth * 0.5 - 50;
 	this.y = canHeight * 0.5 + 50;
-	// this.babyEye.src = "./src/babyEye0.png";
-	// this.babyBody.src = "./src/babyFade0.png";
-	// this.babyTail.src = "./src/babyTail0.png";
 }
 
 babyObj.prototype.draw = function() {
 	// 坐标差
 	this.x = lerpDistance(mom.x, this.x, 0.94);
 	this.y = lerpDistance(mom.y, this.y, 0.94);
-	
+
 	// //角度差
 	var deltaY = mom.y - this.y;
 	var deltaX = mom.x - this.x;
-	var beta = Math.atan2(deltaY, deltaX) + Math.PI; 
+	var beta = Math.atan2(deltaY, deltaX) + Math.PI;
 
 	this.angle = lerpAngle(beta, this.angle, 0.6);
 
@@ -66,7 +63,9 @@ babyObj.prototype.draw = function() {
 		this.babyBodyTimer %= 300;
 		if (this.babyBodyCount > 19) {
 			// gameover
- 		} 
+			this.babyBodyCount = 19;
+			data.gameOver = true;
+ 		}
 	}
 
 	ctx1.save();

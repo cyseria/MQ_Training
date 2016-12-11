@@ -3,8 +3,9 @@
 var fruitObj = function () {
 	this.alive = []; //bool
 	this.x = [];
-	this.y = []; 
+	this.y = [];
 	this.l = []; // 大小
+	this.aneNo = [];
 	this.fruitType = [];
 	this.speed = [];
 	this.origin = new Image();
@@ -19,7 +20,8 @@ fruitObj.prototype.init = function() {
 		this.x[i] = 0;
 		this.y[i] = 0;
 		this.l[i] = 0;
-		this.speed[i] = Math.random() * 0.17 + 0.03; 
+		this.aneNo[i] = 0;
+		this.speed[i] = Math.random() * 0.17 + 0.03;
 	}
 	this.origin.src = "./src/fruit.png";
 	this.blue.src = "./src/blue.png";
@@ -27,7 +29,7 @@ fruitObj.prototype.init = function() {
 }
 
 fruitObj.prototype.draw = function() {
-	
+
 	for (var i = 0; i < this.num; i++) {
 		if (this.alive[i]) {
 			var pic;
@@ -37,24 +39,28 @@ fruitObj.prototype.draw = function() {
 				pic = this.blue;
 			}
 
-			if (this.l[i] <= 14) {
+			if (this.l[i] <= 14) { //grow
+				var NO = this.aneNo[i];
+				this.x[i] = ane.headx[NO];
+				this.y[i] = ane.heady[NO];
 				this.l[i] += this.speed[i] * deltaTime;
 			} else {
 				this.y[i] -= this.speed[i] * deltaTime;
 			}
 			ctx2.drawImage(pic, this.x[i] - this.l[i] * 0.5 , this.y[i] - this.l[i] * 0.5, this.l[i], this.l[i]);
+
 			if (this.y[i] < 10) {
 				this.alive[i] = false;
 			}
 		}
-		
+
 	}
 }
 
 fruitObj.prototype.born = function(i) {
-	var aneId = Math.floor(Math.random() * ane.num);
-	this.x[i] = ane.x[aneId];
-	this.y[i] = canHeight - ane.len[aneId];
+	this.aneNo[i] = Math.floor(Math.random() * ane.num);
+	// this.x[i] = ane.headx[aneId];
+	// this.y[i] = ane.heady[aneId];
 	this.l[i] = 0;
 	this.alive[i] = true;
 	var ran = Math.random();

@@ -14,6 +14,8 @@ var mom;
 var mx; //鼠标x坐标
 var my; // 鼠标y坐标
 
+var data;
+
 var babyTail = [];
 var babyEye = [];
 var babyBody = [];
@@ -21,6 +23,14 @@ var babyBody = [];
 var momTail = [];
 var momEye = [];
 var momBody = [];
+var momBodyOra = [];
+var momBodyBlue = [];
+
+var wave;
+var halo;
+
+var dust;
+var dustPic = [];
 
 document.body.onload = game;
 
@@ -85,10 +95,30 @@ function init() {
 		momEye[i].src = "./src/bigEye" + i + ".png";
 	}
 
-	// for (var i = 0; i < 20; i++) {
-	// 	babyBody[i] = new Image();
-	// 	babyBody[i].src = "./src/babyFade" + i + ".png";
-	// }
+	data = new dataObj();
+
+	for (var i = 0; i < 8; i++) {
+		momBodyOra[i] = new Image();
+		momBodyBlue[i] = new Image();
+		momBodyOra[i].src = "./src/bigSwim" + i + ".png";
+		momBodyBlue[i].src = "./src/bigSwimBlue" + i + ".png";
+	}
+	ctx1.fillStyle = 'white';
+    ctx1.font = "20px Verdana";
+    ctx1.textAlign = "center";
+
+	wave = new waveObj();
+	wave.init();
+
+	halo = new haloObj();
+	halo.init();
+
+	for (var i = 0; i < 7; i++) {
+		dustPic[i] = new Image();
+		dustPic[i].src = "./src/dust" + i + ".png"
+	}
+	dust = new dustObj();
+	dust.init();
 }
 
 // 每一帧需要绘制的
@@ -116,10 +146,18 @@ function gameLoop() {
 
 	momFruitCollision();
 	momBabyCollision();
-	
+
+	data.draw();
+	wave.draw();
+	halo.draw();
+	dust.draw();
+
 }
 
 function onMouseMove(e) {
+	if (data.gameOver) {
+		return;
+	}
 	if (e.offsetX || e.layerX) {
 		mx = e.offsetX == undefined ? e.layerX : e.offsetX;
 		my = e.offsetY == undefined ? e.layerY : e.offsetY;
