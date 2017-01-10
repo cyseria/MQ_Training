@@ -1,7 +1,11 @@
+/**
+ * 鼠标点击绘制点
+ */
+
+
 // 顶点着色器程序，GLSL ES语言
 var VSHADER_SOURCE = `
     attribute vec4 a_Position;
-    attribute float a_PointSize;
 
     void main() {
         gl_Position = a_Position;
@@ -34,7 +38,7 @@ function main() {
     var u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
 
 
-    canvas.onmousedown = function (e) {
+    canvas.onmousedown = function(e) {
         click(e, gl, canvas, a_Position, u_FragColor);
     }
 
@@ -45,14 +49,15 @@ function main() {
 
 var g_points = [];
 var g_colors = [];
+
 function click(e, gl, canvas, a_Position, u_FragColor) {
     var x = e.clientX;
     var y = e.clientY;
     var rect = e.target.getBoundingClientRect();
-    x = ((x - rect.left) - canvas.height/2) / (canvas.height/2);
-    y = (canvas.width/2 - (y - rect.top))/(canvas.width/2);
+    x = ((x - rect.left) - canvas.height / 2) / (canvas.height / 2);
+    y = (canvas.width / 2 - (y - rect.top)) / (canvas.width / 2);
     // 将坐标存储到g_points函数中
-    g_points.push([x,y]);
+    g_points.push([x, y]);
 
     if (x >= 0.0 && y >= 0.0) { // 第一象限红色
         g_colors.push([1.0, 0.0, 0.0, 1.0]);
