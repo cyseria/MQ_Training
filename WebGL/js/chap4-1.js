@@ -1,9 +1,13 @@
+/**
+ * 使用martix库制作旋转平移动画
+ */
+
 // 顶点着色器程序，GLSL ES语言
 var VSHADER_SOURCE = `
     attribute vec4 a_Position;
-    uniform mat4 u_xformMatrix;
+    uniform mat4 u_ModelMatrix;
     void main() {
-        gl_Position = u_xformMatrix * a_Position;
+        gl_Position = u_ModelMatrix * a_Position;
     }
 `;
 
@@ -14,7 +18,7 @@ var FSHADER_SOURCE = `
     }
 `;
 
-var ANGLE = 90.0;
+var ANGLE_STEP = 45.0;
 
 function main() {
     var canvas = document.getElementById('webgl');
@@ -28,26 +32,25 @@ function main() {
 
     var n = initVertexBuffers(gl);
 
-    // 创建旋转矩阵
-    var radian = Math.PI * ANGLE / 180.0; //角度转弧度
-    var cosB = Math.cos(radian), sinB = Math.sin(radian);
-
-    var xformMatrix = new Float32Array([
-        cosB, sinB, 0.0, 0.0,
-        -sinB, cosB, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
-        0.0, 0.0, 0.0, 1.0
-    ])
+    // 设置 canvas 背景色
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
     // 将旋转矩阵传给着色器
-    var u_xformMatrix = gl.getUniformLocation(gl.program, 'u_xformMatrix');
-    gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix);
+    var u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
 
-    // 用背景色填充
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    // 三角形当前的旋转角度
+    var currentAngle = 0.0;
+    // 矩阵模型
+    var modelMatrix = new Matrix4();
 
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
+    var tick = function() {
+        currentAngle = animate(currentAngle); // 更新旋转角
+        draw(gl, n, currentAngle, modelMatrix, u_ModelMatrix);
+        requestAnimationFrame(tick);
+    }
+    tick();
+
+
 }
 
 function initVertexBuffers(gl) {
@@ -80,4 +83,26 @@ function initVertexBuffers(gl) {
     gl.enableVertexAttribArray(a_Position);
 
     return n;
+}
+
+function draw(gl, n, currentAngle, modelMatrix, u_ModelMatrix) {
+    // 设置旋转矩阵
+    modelMatrix.setRotate(currentAngle, 0, 0, 1);
+    modelMatrix.translate(0.35, 0, 0);
+
+    gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
+
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
+}
+
+var g_last = Date.now();
+function animate(angle) {
+    var now = Date.now();
+    var elapsed = now - g_last;
+    g_last = now;
+
+    var newAngle = angle + (ANGLE_STEP * elapsed) / 1000.0;
+    return newAngle %= 360;
 }
